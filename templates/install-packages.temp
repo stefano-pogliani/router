@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# Install additional packages using OPKG.
+#
+
+# Include utility functions.
+{{> utility-run}}
+
+
+# Update package list.
+{{info "Updating package list"}}
+run opkg update
+
+
+# Install packages.
+{{info "Installing packages"}}
+run opkg install {{#each this}} {{{this}}} {{/each}}
+

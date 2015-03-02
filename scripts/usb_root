@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# Configures USB extroot.
+# Requires USB packages and a USB device connected.
+# USB packages are installed by install-packages.
+#
+
+# Copy data over to overlay partition.
+# Setup fstab file.
+# Save step into state file.
+

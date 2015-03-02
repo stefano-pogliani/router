@@ -1,0 +1,49 @@
+#!/bin/sh
+#
+# Sequentially run through the configuration scripts.
+#
+
+STATE_FILE="auto-conf-sequence"
+PKG=${PKG-`dirname ${0}`}
+
+
+# Reboots the system.
+reboot_system() {
+  /sbin/reboot
+}
+
+# Saves the step to resume execution at.
+resume_from() {
+  next_up=$1
+  if [ -z "${next_up}" -a -f "${STATE_FILE}" ]; then
+    rm "${STATE_FILE}"
+  elif [ -n "${next_up}" ]; then
+    echo ${next_up} > "${STATE_FILE}"
+  fi
+}
+
+
+# Install all packages that will be needed.
+# Configuration will happend later.
+_packages_boot() {
+  ${PKG}/install-boot-packages
+  resume_from "_usb_root"
+  reboot_system
+}
+
+# Configure USB root.
+_usb_root() {
+  ${PKG}/usb_root
+  resume_from ""
+  reboot_system
+}
+
+
+#*** main ***#
+# Look for state file, if found resume, else start.
+if [ -f "${STATE_FILE}" ]; then
+  ${STATE_FILE}
+else
+  _packages_boot
+fi
+
