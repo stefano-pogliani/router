@@ -1,0 +1,46 @@
+#!/bin/sh
+#
+# Configures SSH instances.
+#
+
+PKG=${PKG-`dirname ${0}`}
+source "${PKG}/shared/command.inc"
+source "${PKG}/shared/config.inc"
+source "${PKG}/shared/log.inc"
+
+
+# Check if the anon section exists.
+anon_sections=$(uci show dropbear | egrep -o "@dropbear\[.*\]" | sort | uniq)
+if [ -n "${anon_sections}" ]; then
+  for section in ${anon_sections} do
+    linfo "Deleting anonymous Dropbear section ${section}"
+    run uci delete "dropbear.${section}"
+  done
+fi
+
+# Ensure the named lan and wan sections exist.
+if [ 1 -eq "$(uci show dropbear.lan > /dev/null 2>&1; echo $?)" ]; then
+  linfo "Creating LAN dropbear section"
+  run uci set dropbear.lan=dropbear
+fi
+if [ 1 -eq "$(uci show dropbear.wan > /dev/null 2>&1; echo $?)" ]; then
+  linfo "Creating WAN dropbear section"
+  run uci set dropbear.wan=dropbear
+fi
+
+# Set options for the lan instance.
+linfo "Configuring LAN instance"
+run uci set dropbear.lan.Interface=lan
+run uci set dropbear.lan.PasswordAuth=on
+run uci set dropbear.lan.Port=22
+run uci set dropbear.lan.RootPasswordAuth=on
+
+# Set options for the wan instance.
+linfo "Configuring WAN instance"
+run uci set dropbear.wan.Interface=wan
+run uci set dropbear.wan.PasswordAuth=on
+run uci set dropbear.wan.Port=1628
+run uci set dropbear.wan.RootPasswordAuth=off
+
+run uci commit
+

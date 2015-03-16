@@ -1,0 +1,79 @@
+#!/bin/sh
+#
+# Configures DHCP and DNS for the network.
+#
+
+DNSMASQ_CONF="/etc/dnsmasq.conf"
+PKG=${PKG-`dirname ${0}`}
+
+source "${PKG}/shared/command.inc"
+source "${PKG}/shared/config.inc"
+source "${PKG}/shared/log.inc"
+
+
+# Global options.
+linfo "Configuring global DHCP and DNS options"
+run uci set "dhcp.@dnsmasq[0].domain=${DNS_DOMAIN}"
+run uci set "dhcp.@dnsmasq[0].local=/${DNS_DOMAIN}/"
+run uci set dhcp.@dnsmasq[0].expandhosts=1
+run uci set dhcp.@dnsmasq[0].noresolv=1
+
+# Add upstream DNS servers.
+if [ -n "${DNS_HOST1}" ]; then
+  run uci delete dhcp.@dnsmasq[0].server
+  run uci add_list "dhcp.@dnsmasq[0].server=${DNS_HOST1}"
+
+  if [ -n "${DNS_HOST2}" ]; then
+    run uci add_list "dhcp.@dnsmasq[0].server=${DNS_HOST2}"
+  fi
+
+  {{#each extra_upstream_dns}}
+    run uci add_list "dhcp.@dnsmasq[0].server={{this}}"
+  {{/each}}
+fi
+
+
+# Copy additional '.hosts' files to '/etc/dns/'.
+if [ ! -d "/etc/dns" ]; then
+  mkdir "/etc/dns"
+fi
+
+for hfile in "infra" "services" do
+  linfo "Registering hosts file ${hfile}"
+  run cp "${PKG}/etc/${hfile}.hosts" "/etc/dns"
+  run uci add_list "dhcp.@dnsmasq[0].addnhosts='/etc/dns/${hfile}.hosts'"
+done
+
+
+# DHCP pools.
+run uci set dhcp.lan.limit=254
+run uci set dhcp.lan.start=50
+
+ranges=$(grep -c "dhcp-range" "${DNSMASQ_CONF}")
+new_range="dhcp-range=${DNS_DOMAIN},${DHCP_IP_START},${DHCP_IP_END}"
+new_range="${new_range},${DHCP_NETMASK},${DHCP_LEASE}"
+if [ 0 -eq "${ranges}" ]; then
+  echo "\n${new_range}" >> "/etc/dnsmasq.conf"
+
+elif [ 1 -eq "${ranges}" ]; then
+  linfo "Updating dhcp range."
+  run sed "s/dhcp-range=.*/${new_range}/" "/etc/dnsmasq.conf" > "/etc/dnsmasq.conf"
+
+else
+  lerror "Detected too many dhcp ranges: ${ranges}"
+  exit 5
+fi
+
+
+# Static leases.
+{{#each static_leases}}
+  linfo "Adding static lease '{{name}}'"
+  run uci add dhcp host
+  run uci set "dhcp.@host[-1].ip={{ip}}"
+  run uci set "dhcp.@host[-1].mac={{mac}}"
+  run uci set "dhcp.@host[-1].name={{name}}"
+{{/each}}
+
+
+run uci commit
+

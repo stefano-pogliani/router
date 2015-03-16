@@ -1,0 +1,7 @@
+# Hosts file for infrastructure related services.
+192.168.16.102    grafana
+#192.168.16.102    kibana
+#192.168.16.102    logs
+192.168.16.102    rack-tables
+192.168.16.102    zabbix
+

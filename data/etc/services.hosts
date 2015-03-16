@@ -1,0 +1,11 @@
+# Hosts file for other services.
+192.168.16.102    blank
+192.168.16.102    cloud
+192.168.16.102    dev
+#192.168.16.102    docs
+192.168.16.102    git
+192.168.16.102    phpmyadmin
+192.168.16.103    projects
+192.168.16.102    utils
+192.168.16.102    wiki
+

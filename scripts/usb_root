@@ -2,10 +2,93 @@
 #
 # Configures USB extroot.
 # Requires USB packages and a USB device connected.
-# USB packages are installed by install-packages.
+# USB packages are installed by install-boot-packages.
 #
 
-# Copy data over to overlay partition.
+PKG=${PKG-`dirname ${0}`}
+source "${PKG}/shared/command.inc"
+source "${PKG}/shared/config.inc"
+source "${PKG}/shared/log.inc"
+
+
+# Check device to use.
+if [ -z "${USB_ROOT_DEV}" ]; then
+  # Attempt to detect the partition automagically.
+  devs_count=$(ls /dev/ | egrep "sd.[0-9]" | wc -l)
+
+  if [ 0 -eq "${devs_count}" ]; then
+    lerror "Unable to detect any partition matching '/dev/sd.[0-9]'."
+    lerror "You can specify the partition by running " \
+        "USB_ROOT_DEV=\"/dev/sda1\" <command>"
+    exit 1
+  fi
+
+  if [ "${devs_count}" -gt 1 ]; then
+    lerror "Too many partition matching '/dev/sd.[0-9]'."
+    lerror "You can specify the partition by running " \
+        "USB_ROOT_DEV=\"/dev/sda1\" <command>"
+    exit 2
+  fi
+
+  USB_ROOT_DEV="/dev/$(ls /dev/ | egrep "sd.[0-9]")"
+
+else
+  [ -b "${USB_ROOT_DEV}" ] || (
+    lerror "Specified device '${USB_ROOT_DEV}' is not a valid block device.";
+    exit 3
+  )
+fi
+
+
+lwarn "Using partition '${USB_ROOT_DEV}'. Process will resume in 2 seconds."
+sleep 2
+
+# Find out if partition is mounted.
+mount_location=$(mount | grep "${USB_ROOT_DEV}" | awk '{print $3}')
+
+# If not mount it.
+if [ -z "${mount_location}" ]; then
+  run mount "${USB_ROOT_DEV}" "${USB_MOUNT_POINT}"
+  mount_location="${USB_MOUNT_POINT}"
+fi
+
 # Setup fstab file.
-# Save step into state file.
+# Add /overlay target.
+# Add /overlay-boot target.
+if [ -f "/etc/config/fstab" ]; then
+  lerror "Unable to configure USB root as /etc/config/fstab exits already."
+  exit 4
+fi
+
+partition_uuid=$(block detect | grep uuid | awk '{print $3}')
+linfo "Detected partiotion uuid ${partition_uuid}. Resuming in 2 secs."
+sleep 2
+
+echo -n "
+config global
+  option anon_mount '0'
+  option anon_swap  '0'
+  option auto_mount '1'
+  option auto_swap  '1'
+  option check_fs   '0'
+  option delay_root '5'
+
+config mount
+  option enabled '1'
+  option fstype  'ext4'
+  option target  '/overlay'
+  option uuid    ${partition_uuid}
+
+config mount
+  option device       '/dev/mtdblock3'
+  option enabled      '1'
+  option enabled_fsck '0'
+  option fstype       'jffs2'
+  option options      'rw,sync'
+  option target       '/overlay-boot'
+
+" | run tee "/etc/config/fstab" > /dev/null
+
+# Copy data over to overlay partition.
+run tar -C /overlay -cvf - . | tar -C "${mount_location}" -xf -
 

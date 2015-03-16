@@ -1,0 +1,20 @@
+{
+  "users": [{
+    "name":     "stefano",
+    "password": "$1$e/LEsclI$awHoNLq.JpZqnJL6kPiU11"
+  }],
+
+  "keys": [{
+    "key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDLx1qX5NELLYofU7Lp0H2RQirINcGBFUwzSSBAoIwFMw8+v/JScNLb8HYDpMaE9+SSPrzyHanvyNWLQBBaVfTN4ndwlJ8nvo6b2eI735xNNpyW6FIdnZLBDuSRyf3lQKDrJ8bhm4RHErxwgF5k9w9c1kgok5NB9iXx9/8RXP6cMmMUCjubWb32R/5rg8KUtTIssmoKLURkfVXew88pRLVhHwLSgGdQXdeImk+0wd6zAydBdkLlT713Wa+T0NJ8rWggcuRfA4IIHfImPNhWVG2I3+Ec0WCpRSKkTYY46lzYOapK/BAJBlx59UROsYUAIssHY1Anc5wJ0s8SgWLFL++V stefano@sintofan",
+    "target": "/etc/dropbear/authorized_keys"
+  }, {
+    "key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDLx1qX5NELLYofU7Lp0H2RQirINcGBFUwzSSBAoIwFMw8+v/JScNLb8HYDpMaE9+SSPrzyHanvyNWLQBBaVfTN4ndwlJ8nvo6b2eI735xNNpyW6FIdnZLBDuSRyf3lQKDrJ8bhm4RHErxwgF5k9w9c1kgok5NB9iXx9/8RXP6cMmMUCjubWb32R/5rg8KUtTIssmoKLURkfVXew88pRLVhHwLSgGdQXdeImk+0wd6zAydBdkLlT713Wa+T0NJ8rWggcuRfA4IIHfImPNhWVG2I3+Ec0WCpRSKkTYY46lzYOapK/BAJBlx59UROsYUAIssHY1Anc5wJ0s8SgWLFL++V stefano@sintofan",
+    "target": "/home/stefano/.ssh/authorized_keys"
+  }],
+
+  "sudoers": [
+    "# List of autoconfigured sudoers",
+    "stefano ALL=(ALL) ALL"
+  ]
+}
+

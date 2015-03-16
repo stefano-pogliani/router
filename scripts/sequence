@@ -6,9 +6,12 @@
 STATE_FILE="auto-conf-sequence"
 PKG=${PKG-`dirname ${0}`}
 
+source "${PKG}/shared/log.inc"
+
 
 # Reboots the system.
 reboot_system() {
+  linfo "Rebooting system now!"
   /sbin/reboot
 }
 
@@ -23,18 +26,55 @@ resume_from() {
 }
 
 
+# Configure very basic system before setting up extroot.
+# These will be used if mounting extroot fails during boot.
+_fallback_config() {
+  # Network configuration.
+  "${PKG}/essential-net"
+
+  # Disable extra services.
+  "${PKG}/disable-services"
+
+  # Configure failsafe & reset modes.
+  # Should be enabled by default so no need.
+
+  _usb_boot
+}
+
+_main_configuration() {
+  # Install new packages.
+  "${PKG}/install-packages"
+
+  # Configure the system.
+  "${PKG}/configure-system"
+  "${PKG}/configure-dhcp-dns"
+  "${PKG}/configure-ssh"
+  "${PKG}/openvpn"
+  "${PKG}/firewall"
+  "${PKG}/users"
+  "${PKG}/ddns"
+  "${PKG}/printer"
+  "${PKG}/scan"
+  "${PKG}/alias"
+  "${PKG}/zabbix"
+
+  # End of the process.
+  resume_from
+  reboot_system
+}
+
 # Install all packages that will be needed.
 # Configuration will happend later.
 _packages_boot() {
-  ${PKG}/install-boot-packages
-  resume_from "_usb_root"
+  "${PKG}/install-boot-packages"
+  resume_from "_fallback_config"
   reboot_system
 }
 
 # Configure USB root.
 _usb_root() {
-  ${PKG}/usb_root
-  resume_from ""
+  "${PKG}/usb_root"
+  resume_from "_main_configuration"
   reboot_system
 }
 
@@ -42,8 +82,13 @@ _usb_root() {
 #*** main ***#
 # Look for state file, if found resume, else start.
 if [ -f "${STATE_FILE}" ]; then
-  ${STATE_FILE}
+  resume_command=$(cat ${STATE_FILE})
+
+  linfo "Resuming configuration process from ${resume_command}."
+  ${resume_command}
+
 else
+  linfo "Starting configuration process."
   _packages_boot
 fi
 

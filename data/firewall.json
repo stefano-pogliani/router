@@ -1,0 +1,16 @@
+[{
+  "dest_port": 1628,
+  "id":        "ssh-public",
+  "name":      "Public SSH Access",
+  "proto":     "udp",
+  "src":       "wan",
+  "target":    "ACCEPT"
+}, {
+  "dest_port": 2309,
+  "id":        "openvpn-public",
+  "name":      "Public OpenVPN Access",
+  "proto":     "tcp udp",
+  "src":       "wan",
+  "target":    "ACCEPT"
+}]
+

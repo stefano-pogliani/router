@@ -1,0 +1,12 @@
+{
+  "static_leases": [{
+    "ip":   "192.168.23.100",
+    "mac":  "b8:27:eb:64:b5:9a",
+    "name": "lathander"
+  }, {
+    "ip":   "192.168.23.101",
+    "mac":  "b8:27:eb:d4:f6:e2",
+    "name": "thoth"
+  }]
+}
+

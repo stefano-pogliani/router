@@ -1,0 +1,51 @@
+#!/bin/sh
+#
+# Adds and configures users.
+#
+
+PKG=${PKG-`dirname ${0}`}
+source "${PKG}/shared/command.inc"
+source "${PKG}/shared/log.inc"
+
+
+# Add users.
+linfo "Processing users"
+{{#each users}}
+  # Ensure user exists.
+  has_user=$(grep -c "{{name}}" "/etc/passwd")
+  if [ 0 -eq "${has_user}" ]; then
+    run useradd --password '{{password}}' {{name}}
+  fi
+
+  # Ensure home exists.
+  home_dir="/home/{{name}}"
+  run mkdir -p "${home_dir}"
+{{/each}}
+
+
+# Copy SSH keys.
+linfo "Processing SSH keys"
+{{#each keys}}
+  # Ensure target directory exists.
+  target_dir=$(dirname "{{target}}")
+  if [ ! -d "${target_dir}" ]; then
+    mkdir -p "${target_dir}"
+  fi
+
+  # Ensure the key is registered.
+  has_key=$(grep -c "{{key}}" "{{target}}")
+  if [ 0 -eq "${has_key}" ]; then
+    echo "{{key}}" >> "{{target}}"
+  fi
+{{/each}}
+
+
+# Configure sudo.
+linfo "Configuring sudoers"
+{{#each sudoers}}
+  is_registered=$(grep -c "{{this}}" "/etc/sudoers")
+  if [ 0 -eq "${is_registered}" ]; then
+    echo "{{this}}" >> "/etc/sudoers"
+  fi
+{{/each}}
+

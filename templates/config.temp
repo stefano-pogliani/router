@@ -1,0 +1,39 @@
+# Include file store all cnfiguraton options.
+# DHCP and DNS server.
+DHCP_IP_END="{{net.dhcp-end}}"
+DHCP_IP_START="{{net.dhcp-start}}"
+DHCP_LEASE="12h"
+DHCP_NETMASK="{{net.mask}}"
+DNS_DOMAIN="{{domain}}"
+
+
+# Global configuration.
+HOSTNAME="{{hostname}}"
+TARGET_SYSLOG_IP="192.168.16.253"
+
+
+# Install process options.
+USB_MOUNT_POINT="/mnt"
+
+
+# Network parameters.
+DNS_HOST1="8.8.8.8"
+DNS_HOST2="8.8.4.4"
+
+LAN_IP="{{ip}}"
+LAN_MASK="{{net.mask}}"
+LAN_MASK_LEN=20
+
+
+# VPN addresses.
+VPN_L2_END="{{net.vpn-l2-end}}"
+VPN_L2_START="{{net.vpn-l2-start}}"
+
+VPN_L3_IP="{{net.vpn-l3-ip}}"
+VPN_L3_MASK="{{net.vpn-l3-mask}}"
+
+
+# Zabbix
+ZABBIX_AGENT_IP="${LAN_IP}"
+ZABBIX_SERVER="192.168.16.102"
+

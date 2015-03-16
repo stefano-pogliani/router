@@ -5,8 +5,6 @@
   "kmod-usb-storage",
 
   "block-mount",
-  "kmod-fs-ext4",
-  "kmod-fs-ntfs",
-  "kmod-fs-vfat"
+  "kmod-fs-ext4"
 ]
 

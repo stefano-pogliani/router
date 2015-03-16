@@ -1,0 +1,14 @@
+#!/bin/ah
+#
+# Disables the automatic start of services and stops them.
+#
+
+PKG=${PKG-`dirname ${0}`}
+source "${PKG}/shared/log.inc"
+
+{{#each this}}
+linfo "Stopping and disabling service {{this}}"
+/etc/init.d/{{this}} stop
+/etc/init.d/{{this}} disable
+{{/each}}
+

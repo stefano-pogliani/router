@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# Configures print server and default USB printer.
+#
+
+PKG=${PKG-`dirname ${0}`}
+source "${PKG}/shared/command.inc"
+source "${PKG}/shared/log.inc"
+source "${PKG}/shared/uci.inc"
+
+
+linfo "Configuring USB0 printer"
+ensure_named_section "p910nd.hpusb" "p910nd"
+run uci set "p910nd.hpusb.device='/dev/usb/lp0'"
+run uci set "p910nd.hpusb.port=0"
+run uci set "p910nd.hpusb.bidirectional=1"
+run uci set "p910nd.hpusb.enabled=1"
+

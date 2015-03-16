@@ -1,0 +1,51 @@
+#!/bin/sh
+#
+# Configures firewall rules.
+#
+
+PKG=${PKG-`dirname ${0}`}
+source "${PKG}/shared/command.inc"
+source "${PKG}/shared/log.inc"
+source "${PKG}/shared/uci.inc"
+
+
+# Add L3 zone.
+linfo "Configuring L3 VPN zone"
+ensure_named_section "firewall.l3vpn" "zone"
+run uci set "firewall.l3vpn.forward=REJECT"
+run uci set "firewall.l3vpn.input=ACCEPT"
+run uci set "firewall.l3vpn.name=l3vpn"
+run uci set "firewall.l3vpn.network=l3vpn"
+run uci set "firewall.l3vpn.output=ACCEPT"
+
+
+# Add L3 zone forwarding.
+linfo "Configuring L3 VPN forwarding"
+ensure_named_section "firewall.l3vpn-to-wan" "forwarding"
+ensure_named_section "firewall.l3vpn-to-lan" "forwarding"
+ensure_named_section "firewall.lan-to-l3vpn" "forwarding"
+
+run uci set "firewall.l3vpn-to-wan.dest=wan"
+run uci set "firewall.l3vpn-to-wan.src=l3vpn"
+
+run uci set "firewall.l3vpn-to-lan.dest=lan"
+run uci set "firewall.l3vpn-to-lan.src=l3vpn"
+
+run uci set "firewall.lan-to-l3vpn.dest=l3vpn"
+run uci set "firewall.lan-to-l3vpn.src=lan"
+
+
+# Add the rules.
+{{#each this}}
+  linfo "Processing firewall rule {{id}}"
+  ensure_named_section "firewall.{{id}}" "rule"
+
+  run uci set "firewall.{{id}}.dest_port={{dest_port}}"
+  run uci set "firewall.{{id}}.name='{{name}}'"
+  run uci set "firewall.{{id}}.proto='{{proto}}'"
+  run uci set "firewall.{{id}}.src={{src}}"
+  run uci set "firewall.{{id}}.target={{traget}}"
+{{/each}}
+
+run uci commit
+

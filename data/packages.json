@@ -1,0 +1,25 @@
+[
+  "kmod-fs-ntfs",
+  "kmod-fs-vfat",
+  "kmod-usb-printer",
+
+  "ddns-scripts",
+  "etherwake",
+  "openvpn-easy-rsa",
+  "openvpn-openssl",
+  "samba36-server",
+  "sane-frontends",
+  "sane-backends",
+  "xinetd",
+  "zabbix-agentd",
+
+  "hplip",
+  "p910nd",
+
+  "shadow-useradd",
+  "sudo",
+
+  "luci-app-samba",
+  "luci-app-wol"
+]
+

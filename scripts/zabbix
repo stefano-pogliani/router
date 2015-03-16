@@ -1,0 +1,38 @@
+#!/bin/sh
+#
+# Expands zabbix configuration.
+#
+
+PKG=${PKG-`dirname ${0}`}
+ZABBIX_AGENTD_CONF="/etc/zabbix_agentd.conf"
+
+source "${PKG}/shared/command.inc"
+source "${PKG}/shared/config.inc"
+source "${PKG}/shared/log.inc"
+
+
+cat_cfg() {
+  run cat "${PKG}/etc/zabbix_agentd.conf"
+}
+
+null_ch() {
+  run sed "s/$1//"
+}
+
+strip_placeholder() {
+  null_ch '\$' | null_ch '{' | null_ch '}'
+}
+
+
+# ?
+linfo "Generating zabbix configuration"
+# Find needed variables and build sed args.
+names=$(cat_cfg | run grep -o \${.*} | uniq -u | strip_placeholder)
+sed_args=()
+
+for key in ${names}; do
+  sed_args+=(-e "s/\${${key}}/${!key}/")
+done
+
+cat_cfg | run sed "${sed_args[@]}" > "${ZABBIX_AGENTD_CONF}"
+

@@ -1,0 +1,26 @@
+#!/bin/sh
+#
+# Essential network configuration.
+# This is limited to the router IP address and hostname plus
+# DHCP configuration.
+#
+
+PKG=${PKG-`dirname ${0}`}
+source "${PKG}/shared/command.inc"
+source "${PKG}/shared/config.inc"
+source "${PKG}/shared/log.inc"
+
+
+linfo "Setting lan IP address and network to ${LAN_IP}/${LAN_MASK_LEN}"
+run uci set "network.lan.ipaddr=${LAN_IP}"
+run uci set "network.lan.netmask=${LAN_MASK}"
+
+linfo "Updatng DNS host names for lan to ${DNS_HOST1} and ${DNS_HOST2}"
+run uci set "network.lan.dns=${DNS_HOST1} ${DNS_HOST2}"
+
+linfo "Setting hostname to ${HOSTNAME}"
+run uci set "system.@system[0].hostname=${HOSTNAME}"
+
+linfo "Committing *ALL* changes"
+run uci commit
+

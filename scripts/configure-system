@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# ?
+#
+
+PKG=${PKG-`dirname ${0}`}
+source "${PKG}/shared/command.inc"
+source "${PKG}/shared/config.inc"
+source "${PKG}/shared/log.inc"
+
+
+linfo ""
+run uci set "system.@system[0].log_ip=${TARGET_SYSLOG_IP}"
+

@@ -1,0 +1,43 @@
+#!/bin/sh
+#
+# Configures wireless devices and networks.
+#
+
+PKG=${PKG-`dirname ${0}`}
+source "${PKG}/shared/command.inc"
+source "${PKG}/shared/config.inc"
+source "${PKG}/shared/log.inc"
+source "${PKG}/priv/passwords.inc"
+
+
+# Configure radio devices.
+linfo "Configuring wireless devices"
+run uci set wireless.radio0.country=GB
+run uci set wireless.radio1.country=GB
+
+# Delete all default wifi interfaces.
+anon_sections=$(uci show dropbear | egrep -o "@wifi-iface\[.*\]" | sort | uniq)
+if [ -n "${anon_sections}" ]; then
+  for section in ${anon_sections} do
+    linfo "Deleting anonymous WiFi interface section ${section}"
+    run uci delete "wireless.${section}"
+  done
+fi
+
+# Create new WiFi network (if not there yet).
+if [ 1 -eq "$(uci show wireless.lan > /dev/null 2>&1; echo $?)" ]; then
+  linfo "Creating LAN wireless section"
+  run uci set "wireless.lan=wifi-iface"
+fi
+
+# Configure named wifi network.
+linfo "Configuring LAN wireless"
+run uci set "wireless.lan.device=radio0"
+run uci set "wireless.lan.encryption=psk2"
+run uci set "wireless.lan.key=${LAN_WIFI_PASSWORD}"
+run uci set "wireless.lan.mode=ap"
+run uci set "wireless.lan.network=lan"
+run uci set "wireless.lan.ssid=spwl"
+
+run uci commit
+

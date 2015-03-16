@@ -1,0 +1,13 @@
+# Miscellaneous utility functions.
+
+# Ensures that a file contains a line
+ensure_line_in_file() {
+  file="$1"
+  line="$*"
+
+  check_count=$(grep -c "${line}")
+  if [ 0 -eq "${check_count}" ]; then
+    echo >> "${file}"
+  fi
+}
+

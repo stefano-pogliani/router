@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# Configure xinetd to share USB scanner.
+#
+
+PKG=${PKG-`dirname ${0}`}
+source "${PKG}/shared/command.inc"
+source "${PKG}/shared/log.inc"
+
+
+# Create (or replace) configuration file.
+run echo -n 'service sane-port
+{
+  disable        = no
+  socket_type    = stream
+  wait           = no
+  user           = root
+  group          = root
+  server         = /usr/sbin/saned
+  port           = 6566
+  protocol       = tcp
+}
+' > "/etc/xinetd.d/sane"
+

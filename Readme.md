@@ -12,27 +12,9 @@ Scripts and steps assume:
   * Router model:    TP-Link TL-WDR4300
 
 
-Steps
------
-   1. Install OpenWRT onto the router.
-   2. Update root password and enable ssh with keys.
-   3. Install usb support*
-   4. Setup external USB and extroot.
-   5. Configure syslog.
-   6. Setup firewall rules.
-   7. Configure network.
-   8. Configure DHCP and network.
-   9. Install additional packages.
-  10. Add initial users and groups.
-  11. Wireless configuration.
-  12. Configure DDNS client.
-  13. Configure OpenVPN server.
-  14. Initial samba share.
-  15. Enable services at boot.
-  16. Configure LEDs.
-  17. Configure buttons*
-  18. Configure printer and scanner.
-  19. Setup Wake-On-Line client.
+Physical setup
+--------------
+???
 
 
 How it works
@@ -48,6 +30,42 @@ Run the following from the root of the repository to populate the
   npm install
   grunt
 
+  scp dist.tar.gz root@192.168.1.1:
+  ssh root@192.168.1.1
+
+  gunzip dist.tar.gz
+  tar -xf dist.tar
+  rm dist.tar
+
+  ./router-bootstrap/sequence
+
+
+Steps
+-----
+   1. Install OpenWRT onto the router.
+   2. Update root password and enable ssh with keys.
+   3. Install pre-extroot packages.
+   4. Configure router static IP address and hostname.
+   5. Disable all unwanted/unsave services.
+   6. Setup external USB and extroot.
+   7. Install additional packages.
+   8. Configure syslog.
+   9. Configure DHCP and DNS.
+  10. Configure SSH server.
+  11. Wireless configuration.
+  12. Configure OpenVPN server.
+  13. Setup firewall rules.
+  14. Add initial users and groups.
+  15. Setup SSH key.
+  16. Configure DDNS client.
+  17. Initial samba share.
+  18. Configure print server.
+  19. Configure scan server.
+  20. Setup Wake-On-Line client.
+  21. Enhance shell with aliases.
+  22. Zabbix agent.
+  #23. CollectD configuration.
+
 
 Where to start
 --------------
@@ -60,4 +78,14 @@ This information is stored in a `auto-conf-sequence` file.
 
 For this reason `dist/sequence` must be run always from the same directory
 and that directory needs to persist across reboots.
+
+
+Reset to default OpenWRT
+------------------------
+???
+
+
+Dealing with updates
+--------------------
+???
 
