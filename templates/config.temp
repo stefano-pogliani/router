@@ -9,7 +9,7 @@ DNS_DOMAIN="{{domain}}"
 
 # Global configuration.
 HOSTNAME="{{hostname}}"
-TARGET_SYSLOG_IP="192.168.16.253"
+TARGET_SYSLOG_IP="{{syslog-ip}}"
 
 
 # Install process options.

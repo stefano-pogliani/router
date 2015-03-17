@@ -66,11 +66,6 @@ module.exports = function(grunt) {
         src:      "data/disable-services.json",
         template: "disable-services",
         type:     "file"
-      }, { // DHCP and DNS.
-        dest:     "dist/configure-dhcp-dns",
-        src:      "data/dhcp-dns.json",
-        template: "configure-dhcp-dns",
-        type:     "file"
       }, { // Firewall rules.
         dest:     "dist/firewall",
         src:      "data/firewall.json",
@@ -88,12 +83,22 @@ module.exports = function(grunt) {
         src:      "data/modes/debug/config.json",
         template: "config",
         type:     "file"
+      }, { // DHCP and DNS.
+        dest:     "dist/configure-dhcp-dns",
+        src:      "data/modes/debug/dhcp-dns.json",
+        template: "configure-dhcp-dns",
+        type:     "file"
       }],
 
       dist: [{ // Configuration constants.
         dest:     "dist/shared/config.inc",
         src:      "data/modes/dist/config.json",
         template: "config",
+        type:     "file"
+      }, { // DHCP and DNS.
+        dest:     "dist/configure-dhcp-dns",
+        src:      "data/modes/dist/dhcp-dns.json",
+        template: "configure-dhcp-dns",
         type:     "file"
       }]
     }

@@ -1,0 +1,3 @@
+[submodule "priv"]
+	path = priv
+	url = git@forest:config/router-priv.git

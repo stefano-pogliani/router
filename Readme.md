@@ -12,15 +12,24 @@ Scripts and steps assume:
   * Router model:    TP-Link TL-WDR4300
 
 
-Physical setup
+One time setup
 --------------
-???
+
+  1. Connect router to an internet enabled network.
+  2. Connect a device to the router through Ethernet.
+  3. Connect power.
+  4. Upgrade firmware to latest version.
+  5. Upgrade firmware to OpenWRT.
 
 
 How it works
 ------------
-Documents describe the goal of each step but the core
-tutorials are the scripts themeselves.
+This set of scripts is meant to configure an OpenWRT router
+for the network requirements I have.
+The scripts try to be idempotent (no matter how many time
+a script is run it will result in the same configuration)
+but not all of them are.
+**DO NOY ASSUME IDEMPOTENCE**
 
 Some of the scripts are generated using templatise so
 they need to be built first.
@@ -82,7 +91,7 @@ and that directory needs to persist across reboots.
 
 Reset to default OpenWRT
 ------------------------
-???
+
 
 
 Dealing with updates

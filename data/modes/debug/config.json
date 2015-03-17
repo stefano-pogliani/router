@@ -1,7 +1,9 @@
 {
   "domain":   "sph-debug",
   "hostname": "gayr-debug",
-  "ip":       "192.168.48.1",
+
+  "ip": "192.168.48.1",
+  "syslog-ip": "192.168.55.100",
 
   "net": {
     "dhcp-end":   "192.168.55.49",
