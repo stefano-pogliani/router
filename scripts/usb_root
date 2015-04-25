@@ -9,6 +9,7 @@ PKG=${PKG-`dirname ${0}`}
 source "${PKG}/shared/command.inc"
 source "${PKG}/shared/config.inc"
 source "${PKG}/shared/log.inc"
+source "${PKG}/shared/uci.inc"
 
 
 # Check device to use.
@@ -41,7 +42,7 @@ fi
 
 
 lwarn "Using partition '${USB_ROOT_DEV}'. Process will resume in 2 seconds."
-sleep 2
+run sleep 2
 
 # Find out if partition is mounted.
 mount_location=$(mount | grep "${USB_ROOT_DEV}" | awk '{print $3}')
@@ -52,43 +53,54 @@ if [ -z "${mount_location}" ]; then
   mount_location="${USB_MOUNT_POINT}"
 fi
 
+
 # Setup fstab file.
 # Add /overlay target.
 # Add /overlay-boot target.
-if [ -f "/etc/config/fstab" ]; then
-  lerror "Unable to configure USB root as /etc/config/fstab exits already."
-  exit 4
+partition_uuid=$(block detect | grep uuid | awk '{print $3}' | cut -d\' -f2)
+linfo "Detected partiotion uuid '${partition_uuid}'. Resuming in 2 secs."
+run sleep 2
+
+
+linfo "Setting global fstab options"
+ensure_unamed_section "fstab" "global"
+run uci set "fstab.@global[0].anon_mount=0"
+run uci set "fstab.@global[0].anon_swap=0"
+run uci set "fstab.@global[0].auto_mount=1"
+run uci set "fstab.@global[0].auto_swap=1"
+run uci set "fstab.@global[0].check_fs=0"
+run uci set "fstab.@global[0].delay_root=5"
+
+linfo "Configuring coverlay mount point"
+ensure_named_section "fstab.overlay" "mount"
+run uci set "fstab.overlay.enabled=1"
+run uci set "fstab.overlay.fstype=ext4"
+run uci set "fstab.overlay.target=/overlay"
+run uci set "fstab.overlay.uuid=${partition_uuid}"
+
+linfo "Configuring overlay-boot mount point"
+ensure_named_section "fstab.overlay_boot" "mount"
+run uci set "fstab.overlay_boot.device=/dev/mtdblock3"
+run uci set "fstab.overlay_boot.enabled=1"
+run uci set "fstab.overlay_boot.enabled_fsck=0"
+run uci set "fstab.overlay_boot.fstype=jffs2"
+run uci set "fstab.overlay_boot.options=rw,sync"
+run uci set "fstab.overlay_boot.target=/overlay-boot"
+if [ ! -d "/overlay-boot" ]; then
+  run mkdir "/overlay-boot"
 fi
 
-partition_uuid=$(block detect | grep uuid | awk '{print $3}')
-linfo "Detected partiotion uuid ${partition_uuid}. Resuming in 2 secs."
-sleep 2
 
-echo -n "
-config global
-  option anon_mount '0'
-  option anon_swap  '0'
-  option auto_mount '1'
-  option auto_swap  '1'
-  option check_fs   '0'
-  option delay_root '5'
+linfo "Committing *ALL* changes"
+run uci commit
 
-config mount
-  option enabled '1'
-  option fstype  'ext4'
-  option target  '/overlay'
-  option uuid    ${partition_uuid}
 
-config mount
-  option device       '/dev/mtdblock3'
-  option enabled      '1'
-  option enabled_fsck '0'
-  option fstype       'jffs2'
-  option options      'rw,sync'
-  option target       '/overlay-boot'
+# Enable fstab at boot.
+linfo "Enable fstab at boot"
+/etc/init.d/fstab enable
 
-" | run tee "/etc/config/fstab" > /dev/null
 
 # Copy data over to overlay partition.
+linfo "Copying data to USB partition"
 run tar -C /overlay -cvf - . | tar -C "${mount_location}" -xf -
 

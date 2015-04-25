@@ -1,13 +1,13 @@
 [{
   "dest_port": 1628,
-  "id":        "ssh-public",
+  "id":        "ssh_public",
   "name":      "Public SSH Access",
-  "proto":     "udp",
+  "proto":     "tcp",
   "src":       "wan",
   "target":    "ACCEPT"
 }, {
   "dest_port": 2309,
-  "id":        "openvpn-public",
+  "id":        "openvpn_public",
   "name":      "Public OpenVPN Access",
   "proto":     "tcp udp",
   "src":       "wan",

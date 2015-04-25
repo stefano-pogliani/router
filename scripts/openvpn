@@ -24,7 +24,7 @@ run uci set "network.tun0.proto=none"
 
 # Extend lan bridge configuration.
 current=$(uci get "network.lan.ifname")
-run uci set "network.lan.ifname='${current} tap0'"
+uci_set_with_spaces "network.lan.ifname" "${current} tap0"
 
 
 # Configure OpenVPN TAP interface.
@@ -34,25 +34,26 @@ ensure_named_section "openvpn.lan" "openvpn"
 run uci set "openvpn.lan.comp_lzo=1"
 run uci set "openvpn.lan.dev=tap0"
 run uci set "openvpn.lan.enable=1"
-run uci set "openvpn.lan.keepalive='10 120'"
+uci_set_with_spaces "openvpn.lan.keepalive" "10 120"
 run uci set "openvpn.lan.persist_key=1"
 run uci set "openvpn.lan.persist_tun=1"
 run uci set "openvpn.lan.port=2309"
 run uci set "openvpn.lan.proto=udp"
 run uci set "openvpn.lan.verb=3"
 
-run uci set "openvpn.lan.ca='/etc/openvpn/ca.crt'"
-run uci set "openvpn.lan.cert='/etc/openvpn/server.crt'"
-run uci set "openvpn.lan.dh='/etc/openvpn/dh2048.pem'"
-run uci set "openvpn.lan.key='/etc/openvpn/server.key'"
+run uci set "openvpn.lan.ca=/etc/openvpn/ca.crt"
+run uci set "openvpn.lan.cert=/etc/openvpn/gayr.crt"
+run uci set "openvpn.lan.dh=/etc/openvpn/dh2048.pem"
+run uci set "openvpn.lan.key=/etc/openvpn/gayr.key"
 
-run uci set "openvpn.lan.ifconfig_pool_persist='/tmp/ipp-tap0.txt'"
-run uci set "openvpn.lan.status='/tmp/openvpn-status-tap0.log'"
+run uci set "openvpn.lan.ifconfig_pool_persist=/tmp/ipp-tap0.txt"
+run uci set "openvpn.lan.status=/tmp/openvpn-status-tap0.log"
 
-run uci set "openvpn.lan.server_bridge='${LAN_IP} ${LAN_MASK} ${VPN_L2_START} ${VPN_L2_END}'"
+uci_set_with_spaces "openvpn.lan.server_bridge" \
+  "${LAN_IP} ${LAN_MASK} ${VPN_L2_START} ${VPN_L2_END}"
 uci_delete_option "openvpn.lan.push"
-run uci add_list "openvpn.lan.push='dhcp-option DNS ${LAN_IP}'"
-run uci add_list "openvpn.lan.push='dhcp-option DOMAIN ${DNS_DOMAIN}'"
+uci_add_list_with_spaces "openvpn.lan.push" "dhcp-option DNS ${LAN_IP}"
+uci_add_list_with_spaces "openvpn.lan.push" "dhcp-option DOMAIN ${DNS_DOMAIN}"
 
 
 # Configure OpenVPN TUN interface.
@@ -62,38 +63,45 @@ ensure_named_section "openvpn.l3vpn" "openvpn"
 run uci set "openvpn.l3vpn.comp_lzo=1"
 run uci set "openvpn.l3vpn.dev=tun0"
 run uci set "openvpn.l3vpn.enable=1"
-run uci set "openvpn.l3vpn.keepalive='10 120'"
+uci_set_with_spaces "openvpn.l3vpn.keepalive" "10 120"
 run uci set "openvpn.l3vpn.persist_key=1"
 run uci set "openvpn.l3vpn.persist_tun=1"
 run uci set "openvpn.l3vpn.port=2309"
 run uci set "openvpn.l3vpn.proto=tcp"
 run uci set "openvpn.l3vpn.verb=3"
 
-run uci set "openvpn.l3vpn.ca='/etc/openvpn/ca.crt'"
-run uci set "openvpn.l3vpn.cert='/etc/openvpn/server.crt'"
-run uci set "openvpn.l3vpn.dh='/etc/openvpn/dh2048.pem'"
-run uci set "openvpn.l3vpn.key='/etc/openvpn/server.key'"
+run uci set "openvpn.l3vpn.ca=/etc/openvpn/ca.crt"
+run uci set "openvpn.l3vpn.cert=/etc/openvpn/gayr.crt"
+run uci set "openvpn.l3vpn.dh=/etc/openvpn/dh2048.pem"
+run uci set "openvpn.l3vpn.key=/etc/openvpn/gayr.key"
 
-run uci set "openvpn.l3vpn.ifconfig_pool_persist='/tmp/ipp-tun0.txt'"
-run uci set "openvpn.l3vpn.status='/tmp/openvpn-status-tun0.log'"
+run uci set "openvpn.l3vpn.ifconfig_pool_persist=/tmp/ipp-tun0.txt"
+run uci set "openvpn.l3vpn.status=/tmp/openvpn-status-tun0.log"
 
-run uci set "openvpn.l3vpn.server='${VPN_L3_IP} ${VPN_L3_MASK}'"
+uci_set_with_spaces "openvpn.l3vpn.server" "${VPN_L3_IP} ${VPN_L3_MASK}"
 uci_delete_option "openvpn.l3vpn.push"
-run uci add_list "openvpn.l3vpn.push='dhcp-option DNS ${LAN_IP}'"
-run uci add_list "openvpn.l3vpn.push='dhcp-option DOMAIN ${DNS_DOMAIN}'"
-
+uci_add_list_with_spaces "openvpn.l3vpn.push" "dhcp-option DNS ${LAN_IP}"
+uci_add_list_with_spaces "openvpn.l3vpn.push" "dhcp-option DOMAIN ${DNS_DOMAIN}"
 
 run uci commit;
 
 
 # Copy required keys.
-mv_priv() {
+add_priv() {
   name=$1
-  mv "${PKG}/priv/${name}" "/etc/openvpn/${name}"
+  run cp "${PKG}/priv/openvpn/${name}" "/etc/openvpn/${name}"
 }
+
 linfo "Copying OpenVPN keys"
-mv_priv "ca.crt"
-mv_priv "server.crt"
-mv_priv "dh2048.pem"
-mv_priv "server.key"
+if [ ! -d "/etc/openvpn" ]; then
+  mkdir "/etc/openvpn"
+fi
+add_priv "ca.crt"
+add_priv "dh2048.pem"
+add_priv "gayr.crt"
+add_priv "gayr.key"
+
+
+linfo "Enabling OpenVPN service"
+/etc/init.d/openvpn enable
 

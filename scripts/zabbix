@@ -15,6 +15,11 @@ cat_cfg() {
   run cat "${PKG}/etc/zabbix_agentd.conf"
 }
 
+get_env_var() {
+  key=$1
+  eval "echo \${${key}}"
+}
+
 null_ch() {
   run sed "s/$1//"
 }
@@ -28,11 +33,15 @@ strip_placeholder() {
 linfo "Generating zabbix configuration"
 # Find needed variables and build sed args.
 names=$(cat_cfg | run grep -o \${.*} | uniq -u | strip_placeholder)
-sed_args=()
+sed_args=""
 
 for key in ${names}; do
-  sed_args+=(-e "s/\${${key}}/${!key}/")
+  sed_args="${sed_args} -e s/\${${key}}/$(get_env_var ${key})/"
 done
 
-cat_cfg | run sed "${sed_args[@]}" > "${ZABBIX_AGENTD_CONF}"
+cat_cfg | run sed ${sed_args} > "${ZABBIX_AGENTD_CONF}"
+
+
+linfo "Enabling zabbix service"
+/etc/init.d/zabbix enable
 

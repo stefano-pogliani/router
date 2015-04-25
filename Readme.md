@@ -91,10 +91,29 @@ and that directory needs to persist across reboots.
 
 Reset to default OpenWRT
 ------------------------
+To achieve this the device must be rebooted in failsafe mode:
 
+  1) Power of the device
+  2) Repeatedly press the reset button on the back as the device boots.
+  3) Telnet in with the default IP 192.168.1.1
+
+Once in the configuration on the device can be reset to stock OpenWRT
+through the `firstboot` command.
+Once the command is complete the device can be rebooted into a clean install.
+
+Keep in mind that the USB device will not be used to boot but it
+will still have the previous data so it will need to be cleared too.
 
 
 Dealing with updates
 --------------------
-???
+Updates should be made to this script first and to the device after.
+Updates should also never be made through the web interface.
+
+Remember that most scripts are idempotent and those that are not
+can be refactored to be.
+Maybe an update can be done by running the individual step?
+
+If the changes require a lot of manual work to be performed
+a reset and reinstall may be a good option.
 

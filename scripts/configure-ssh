@@ -12,7 +12,7 @@ source "${PKG}/shared/log.inc"
 # Check if the anon section exists.
 anon_sections=$(uci show dropbear | egrep -o "@dropbear\[.*\]" | sort | uniq)
 if [ -n "${anon_sections}" ]; then
-  for section in ${anon_sections} do
+  for section in ${anon_sections}; do
     linfo "Deleting anonymous Dropbear section ${section}"
     run uci delete "dropbear.${section}"
   done

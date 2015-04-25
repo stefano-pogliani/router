@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+# Configures samba settings
+#
+
+PKG=${PKG-`dirname ${0}`}
+SAMBA_CFG=/etc/samba/smb.conf.template
+
+source "${PKG}/shared/command.inc"
+source "${PKG}/shared/config.inc"
+source "${PKG}/shared/log.inc"
+source "${PKG}/shared/uci.inc"
+source "${PKG}/shared/util.inc"
+
+
+linfo "Updating SAMBA settings"
+ensure_unamed_section "samba" "samba"
+run uci set "samba.@samba[0].description=${HOSTNAME}"
+run uci set "samba.@samba[0].homes=0"
+run uci set "samba.@samba[0].name=${HOSTNAME}"
+
+
+linfo "Editing samba template"
+simple_replace "${SAMBA_CFG}" "guest ok = yes" "guest ok = no"
+simple_replace "${SAMBA_CFG}" "null passwords = yes" "null passwords = no"
+
+
+linfo "Commiting UCI changes"
+run uci commit
+
+
+linfo "Enabling samba service"
+/etc/init.d/samba enable
+

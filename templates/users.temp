@@ -14,7 +14,7 @@ linfo "Processing users"
   # Ensure user exists.
   has_user=$(grep -c "{{name}}" "/etc/passwd")
   if [ 0 -eq "${has_user}" ]; then
-    run useradd --password '{{password}}' {{name}}
+    run useradd --password '{{password}}' --shell '{{shell}}' {{name}}
   fi
 
   # Ensure home exists.
@@ -29,7 +29,12 @@ linfo "Processing SSH keys"
   # Ensure target directory exists.
   target_dir=$(dirname "{{target}}")
   if [ ! -d "${target_dir}" ]; then
-    mkdir -p "${target_dir}"
+    run mkdir -p "${target_dir}"
+  fi
+
+  # Ensure target file exists
+  if [ ! -f "{{target}}" ]; then
+    run touch "{{target}}"
   fi
 
   # Ensure the key is registered.

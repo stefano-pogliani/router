@@ -21,18 +21,18 @@ run uci set "firewall.l3vpn.output=ACCEPT"
 
 # Add L3 zone forwarding.
 linfo "Configuring L3 VPN forwarding"
-ensure_named_section "firewall.l3vpn-to-wan" "forwarding"
-ensure_named_section "firewall.l3vpn-to-lan" "forwarding"
-ensure_named_section "firewall.lan-to-l3vpn" "forwarding"
+ensure_named_section "firewall.l3vpn_to_wan" "forwarding"
+ensure_named_section "firewall.l3vpn_to_lan" "forwarding"
+ensure_named_section "firewall.lan_to_l3vpn" "forwarding"
 
-run uci set "firewall.l3vpn-to-wan.dest=wan"
-run uci set "firewall.l3vpn-to-wan.src=l3vpn"
+run uci set "firewall.l3vpn_to_wan.dest=wan"
+run uci set "firewall.l3vpn_to_wan.src=l3vpn"
 
-run uci set "firewall.l3vpn-to-lan.dest=lan"
-run uci set "firewall.l3vpn-to-lan.src=l3vpn"
+run uci set "firewall.l3vpn_to_lan.dest=lan"
+run uci set "firewall.l3vpn_to_lan.src=l3vpn"
 
-run uci set "firewall.lan-to-l3vpn.dest=l3vpn"
-run uci set "firewall.lan-to-l3vpn.src=lan"
+run uci set "firewall.lan_to_l3vpn.dest=l3vpn"
+run uci set "firewall.lan_to_l3vpn.src=lan"
 
 
 # Add the rules.
@@ -40,12 +40,13 @@ run uci set "firewall.lan-to-l3vpn.src=lan"
   linfo "Processing firewall rule {{id}}"
   ensure_named_section "firewall.{{id}}" "rule"
 
-  run uci set "firewall.{{id}}.dest_port={{dest_port}}"
-  run uci set "firewall.{{id}}.name='{{name}}'"
-  run uci set "firewall.{{id}}.proto='{{proto}}'"
+  uci_set_with_spaces "firewall.{{id}}.dest_port" "{{dest_port}}"
+  uci_set_with_spaces "firewall.{{id}}.name" "{{name}}"
+  uci_set_with_spaces "firewall.{{id}}.proto" "{{proto}}"
   run uci set "firewall.{{id}}.src={{src}}"
   run uci set "firewall.{{id}}.target={{traget}}"
 {{/each}}
 
+linfo "Commiting firewall configuration"
 run uci commit
 

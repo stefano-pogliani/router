@@ -9,6 +9,7 @@ DNS_DOMAIN="{{domain}}"
 
 # Global configuration.
 HOSTNAME="{{hostname}}"
+LAN_WIFI_NAME="{{wifi-name}}"
 TARGET_SYSLOG_IP="{{syslog-ip}}"
 
 
@@ -35,5 +36,5 @@ VPN_L3_MASK="{{net.vpn-l3-mask}}"
 
 # Zabbix
 ZABBIX_AGENT_IP="${LAN_IP}"
-ZABBIX_SERVER="192.168.16.102"
+ZABBIX_SERVER="{{zabbix-ip}}"
 

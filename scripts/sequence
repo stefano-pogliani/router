@@ -3,25 +3,29 @@
 # Sequentially run through the configuration scripts.
 #
 
-STATE_FILE="auto-conf-sequence"
+STATE_FILE="${PWD}/auto-conf-sequence"
+USE_OVERLAY_STATE="${PWD}/resume_overlay_boot"
 PKG=${PKG-`dirname ${0}`}
 
+source "${PKG}/shared/command.inc"
 source "${PKG}/shared/log.inc"
 
 
 # Reboots the system.
 reboot_system() {
   linfo "Rebooting system now!"
-  /sbin/reboot
+  linfo "***   Auto Rebood DISABLED   ***"
+  linfo "*** Please reboot the system ***"
+  #run /sbin/reboot
 }
 
 # Saves the step to resume execution at.
 resume_from() {
   next_up=$1
   if [ -z "${next_up}" -a -f "${STATE_FILE}" ]; then
-    rm "${STATE_FILE}"
+    run rm "${STATE_FILE}"
   elif [ -n "${next_up}" ]; then
-    echo ${next_up} > "${STATE_FILE}"
+    run echo ${next_up} > "${STATE_FILE}"
   fi
 }
 
@@ -30,50 +34,54 @@ resume_from() {
 # These will be used if mounting extroot fails during boot.
 _fallback_config() {
   # Network configuration.
-  "${PKG}/essential-net"
+  run "${PKG}/essential-net"
 
   # Disable extra services.
-  "${PKG}/disable-services"
+  run "${PKG}/disable-services"
 
   # Configure failsafe & reset modes.
   # Should be enabled by default so no need.
 
-  _usb_boot
+  _usb_root
 }
 
 _main_configuration() {
   # Install new packages.
-  "${PKG}/install-packages"
+  run "${PKG}/install-packages"
 
   # Configure the system.
-  "${PKG}/configure-system"
-  "${PKG}/configure-dhcp-dns"
-  "${PKG}/configure-ssh"
-  "${PKG}/openvpn"
-  "${PKG}/firewall"
-  "${PKG}/users"
-  "${PKG}/ddns"
-  "${PKG}/printer"
-  "${PKG}/scan"
-  "${PKG}/alias"
-  "${PKG}/zabbix"
+  run "${PKG}/configure-system"
+  run "${PKG}/configure-dhcp-dns"
+  run "${PKG}/configure-ssh"
+  run "${PKG}/wireless"
+  run "${PKG}/openvpn"
+  run "${PKG}/firewall"
+  run "${PKG}/users"
+  run "${PKG}/ddns"
+  run "${PKG}/printer"
+  run "${PKG}/scan"
+  run "${PKG}/alias"
+  run "${PKG}/zabbix"
 
   # End of the process.
   resume_from
-  reboot_system
 }
 
 # Install all packages that will be needed.
 # Configuration will happend later.
 _packages_boot() {
-  "${PKG}/install-boot-packages"
+  run "${PKG}/install-boot-packages"
   resume_from "_fallback_config"
   reboot_system
 }
 
 # Configure USB root.
 _usb_root() {
-  "${PKG}/usb_root"
+  # Create a temporary file that will be used on resume to detect
+  # the parition swap.
+  echo "${STATE_FILE}" > "${USE_OVERLAY_STATE}"
+
+  run "${PKG}/usb_root"
   resume_from "_main_configuration"
   reboot_system
 }
@@ -81,6 +89,17 @@ _usb_root() {
 
 #*** main ***#
 # Look for state file, if found resume, else start.
+if [ -f "${USE_OVERLAY_STATE}" -a -d "/overlay-boot" ]; then
+  file_path=$(cat ${USE_OVERLAY_STATE})
+  linfo "Detected overlay redirect file, fetching /overlay-boot/${file_path}"
+
+  if [ -f "${STATE_FILE}" ]; then
+    run rm "${STATE_FILE}"
+  fi
+  run mv "/overlay-boot/${file_path}" "${STATE_FILE}"
+  run rm "${USE_OVERLAY_STATE}"
+fi
+
 if [ -f "${STATE_FILE}" ]; then
   resume_command=$(cat ${STATE_FILE})
 

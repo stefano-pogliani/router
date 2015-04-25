@@ -9,6 +9,7 @@ source "${PKG}/shared/log.inc"
 
 
 # Create (or replace) configuration file.
+linfo "Creating SANE configuration"
 run echo -n 'service sane-port
 {
   disable        = no
@@ -21,4 +22,7 @@ run echo -n 'service sane-port
   protocol       = tcp
 }
 ' > "/etc/xinetd.d/sane"
+
+linfo "Enabling xinetd service"
+/etc/init.d/xinetd enable
 

@@ -15,8 +15,13 @@ linfo "Setting lan IP address and network to ${LAN_IP}/${LAN_MASK_LEN}"
 run uci set "network.lan.ipaddr=${LAN_IP}"
 run uci set "network.lan.netmask=${LAN_MASK}"
 
+# UCI is refusing to properly except spaces when used with the run wrapper.
+# For now work around it by calling a function.
+_set_dns_value() {
+  uci set "network.lan.dns=${DNS_HOST1} ${DNS_HOST2}"
+}
 linfo "Updatng DNS host names for lan to ${DNS_HOST1} and ${DNS_HOST2}"
-run uci set "network.lan.dns=${DNS_HOST1} ${DNS_HOST2}"
+run _set_dns_value
 
 linfo "Setting hostname to ${HOSTNAME}"
 run uci set "system.@system[0].hostname=${HOSTNAME}"

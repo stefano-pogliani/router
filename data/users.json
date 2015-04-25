@@ -1,7 +1,8 @@
 {
   "users": [{
     "name":     "stefano",
-    "password": "$1$e/LEsclI$awHoNLq.JpZqnJL6kPiU11"
+    "password": "$1$e/LEsclI$awHoNLq.JpZqnJL6kPiU11",
+    "shell":    "/bin/ash"
   }],
 
   "keys": [{

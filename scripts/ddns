@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# ???
+# Configures DynamicDNS client.
 #
 
 PKG=${PKG-`dirname ${0}`}
@@ -26,4 +26,11 @@ run uci set "ddns.spddns.domain='spddns.no-ip.biz'"
 run uci set "ddns.spddns.password='6xhexhea'"
 run uci set "ddns.spddns.service_name='no-ip.com'"
 run uci set "ddns.spddns.username='spogliani'"
+
+linfo "Commiting DDNS configuration"
+run uci commit
+
+
+linfo "Enabling DDNS service"
+/etc/init.d/ddns enable
 
