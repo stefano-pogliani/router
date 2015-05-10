@@ -31,7 +31,7 @@ uci_set_with_spaces "network.lan.ifname" "${current} tap0"
 # The tap interface is used for the Ethernet bridge.
 linfo "Configuring TAP instance"
 ensure_named_section "openvpn.lan" "openvpn"
-run uci set "openvpn.lan.comp_lzo=1"
+run uci set "openvpn.lan.comp_lzo=yes"
 run uci set "openvpn.lan.dev=tap0"
 run uci set "openvpn.lan.enable=1"
 uci_set_with_spaces "openvpn.lan.keepalive" "10 120"
@@ -60,7 +60,7 @@ uci_add_list_with_spaces "openvpn.lan.push" "dhcp-option DOMAIN ${DNS_DOMAIN}"
 # The tun interface is used for the IP bridge.
 linfo "Configuring TUN instance"
 ensure_named_section "openvpn.l3vpn" "openvpn"
-run uci set "openvpn.l3vpn.comp_lzo=1"
+run uci set "openvpn.l3vpn.comp_lzo=yes"
 run uci set "openvpn.l3vpn.dev=tun0"
 run uci set "openvpn.l3vpn.enable=1"
 uci_set_with_spaces "openvpn.l3vpn.keepalive" "10 120"
@@ -104,4 +104,3 @@ add_priv "gayr.key"
 
 linfo "Enabling OpenVPN service"
 /etc/init.d/openvpn enable
-

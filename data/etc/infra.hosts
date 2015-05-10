@@ -1,5 +1,6 @@
 # Hosts file for infrastructure related services.
 192.168.23.100    grafana
+192.168.23.100    forest
 #192.168.23.100    kibana
 #192.168.23.100    logs
 192.168.23.100    rack-tables
