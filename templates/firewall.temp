@@ -12,10 +12,11 @@ source "${PKG}/shared/uci.inc"
 # Add L3 zone.
 linfo "Configuring L3 VPN zone"
 ensure_named_section "firewall.l3vpn" "zone"
+uci_delete_option "firewall.l3vpn.network"
+run uci add_list"firewall.l3vpn.network=l3vpn"
 run uci set "firewall.l3vpn.forward=REJECT"
 run uci set "firewall.l3vpn.input=ACCEPT"
 run uci set "firewall.l3vpn.name=l3vpn"
-run uci set "firewall.l3vpn.network=l3vpn"
 run uci set "firewall.l3vpn.output=ACCEPT"
 
 
@@ -41,10 +42,10 @@ run uci set "firewall.lan_to_l3vpn.src=lan"
   ensure_named_section "firewall.{{id}}" "rule"
 
   uci_set_with_spaces "firewall.{{id}}.dest_port" "{{dest_port}}"
-  uci_set_with_spaces "firewall.{{id}}.name" "{{name}}"
-  uci_set_with_spaces "firewall.{{id}}.proto" "{{proto}}"
-  run uci set "firewall.{{id}}.src={{src}}"
-  run uci set "firewall.{{id}}.target={{traget}}"
+  uci_set_with_spaces "firewall.{{id}}.name"      "{{name}}"
+  uci_set_with_spaces "firewall.{{id}}.proto"     "{{proto}}"
+  uci_set_with_spaces "firewall.{{id}}.src"       "{{src}}"
+  uci_set_with_spaces "firewall.{{id}}.target"    "{{target}}"
 {{/each}}
 
 linfo "Commiting firewall configuration"

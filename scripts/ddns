@@ -13,19 +13,19 @@ source "${PKG}/shared/uci.inc"
 # Ensure uci section exists.
 ensure_named_section "ddns.spddns" "service"
 run uci set "ddns.spddns.enabled=1"
-run uci set "ddns.spddns.interface='wan'"
+run uci set "ddns.spddns.interface=wan"
 
-run uci set "ddns.spddns.check_unit='minutes'"
+run uci set "ddns.spddns.check_unit=minutes"
 run uci set "ddns.spddns.check_interval=5"
-run uci set "ddns.spddns.force_unit='hours'"
+run uci set "ddns.spddns.force_unit=hours"
 run uci set "ddns.spddns.force_interval=1"
-run uci set "ddns.spddns.ip_source='web'"
-run uci set "ddns.spddns.ip_url='http://myip.spogliani.net'"
+run uci set "ddns.spddns.ip_source=web"
+run uci set "ddns.spddns.ip_url=http://myip.spogliani.net"
 
-run uci set "ddns.spddns.domain='spddns.no-ip.biz'"
-run uci set "ddns.spddns.password='6xhexhea'"
-run uci set "ddns.spddns.service_name='no-ip.com'"
-run uci set "ddns.spddns.username='spogliani'"
+run uci set "ddns.spddns.domain=spddns.no-ip.biz"
+run uci set "ddns.spddns.password=6xhexhea"
+run uci set "ddns.spddns.service_name=no-ip.com"
+run uci set "ddns.spddns.username=spogliani"
 
 linfo "Commiting DDNS configuration"
 run uci commit
