@@ -29,7 +29,7 @@ for the network requirements I have.
 The scripts try to be idempotent (no matter how many time
 a script is run it will result in the same configuration)
 but not all of them are.
-**DO NOY ASSUME IDEMPOTENCE**
+**DO NOT ASSUME IDEMPOTENCE**
 
 Some of the scripts are generated using templatise so
 they need to be built first.
@@ -116,4 +116,3 @@ Maybe an update can be done by running the individual step?
 
 If the changes require a lot of manual work to be performed
 a reset and reinstall may be a good option.
-

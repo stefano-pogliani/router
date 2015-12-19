@@ -1,9 +1,9 @@
 # Hosts file for infrastructure related services.
 # Hosts.
+192.168.16.1      gayr.sph gayr spddns.no-ip.biz
 192.168.23.100    forest
 
 # Services.
 192.168.31.253    grafana
 192.168.23.100    rack-tables
 192.168.23.100    zabbix
-

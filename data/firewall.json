@@ -1,16 +1,46 @@
-[{
-  "dest_port": 1628,
-  "id":        "ssh_public",
-  "name":      "Public SSH Access",
-  "proto":     "tcp",
-  "src":       "wan",
-  "target":    "ACCEPT"
-}, {
-  "dest_port": 2309,
-  "id":        "openvpn_public",
-  "name":      "Public OpenVPN Access",
-  "proto":     "tcp udp",
-  "src":       "wan",
-  "target":    "ACCEPT"
-}]
+{
+  "rules": [{
+    "dest_port": 1628,
+    "id":        "ssh_public",
+    "name":      "Public SSH Access",
+    "proto":     "tcp",
+    "src":       "wan",
+    "target":    "ACCEPT"
+  }, {
+    "dest_port": 2309,
+    "id":        "openvpn_public",
+    "name":      "Public OpenVPN Access",
+    "proto":     "tcp udp",
+    "src":       "wan",
+    "target":    "ACCEPT"
+  }, {
+    "dest_port": 2351,
+    "id":        "owncloud_public",
+    "name":      "Public OwnCloud Access",
+    "proto":     "tcp",
+    "src":       "wan",
+    "target":    "ACCEPT"
+  }],
 
+  "port_forwords": [{
+    "dest":      "lan",
+    "dest_ip":   "192.168.23.103",
+    "dest_port": 443,
+    "id":        "owncloud_external",
+    "name":      "OwnCloud external",
+    "proto":     "tcp",
+    "src":       "wan",
+    "src_dport": 2351,
+    "target":    "DNAT"
+  }, {
+    "dest":      "lan",
+    "dest_ip":   "192.168.23.103",
+    "dest_port": 443,
+    "id":        "owncloud_internal",
+    "name":      "OwnCloud internal",
+    "proto":     "tcp",
+    "src":       "lan",
+    "src_dport": 2351,
+    "target":    "DNAT"
+  }]
+}
