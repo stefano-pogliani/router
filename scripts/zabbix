@@ -44,4 +44,3 @@ cat_cfg | run sed ${sed_args} > "${ZABBIX_AGENTD_CONF}"
 
 linfo "Enabling zabbix service"
 /etc/init.d/zabbix enable
-

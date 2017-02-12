@@ -58,10 +58,10 @@ _main_configuration() {
   run "${PKG}/firewall"
   run "${PKG}/users"
   run "${PKG}/ddns"
-  run "${PKG}/printer"
-  run "${PKG}/scan"
+  #run "${PKG}/printer"
+  #run "${PKG}/scan"
   run "${PKG}/alias"
-  run "${PKG}/zabbix"
+  #run "${PKG}/zabbix"
 
   # End of the process.
   resume_from
@@ -91,7 +91,7 @@ _usb_root() {
 # Look for state file, if found resume, else start.
 if [ -f "${USE_OVERLAY_STATE}" -a -d "/overlay-boot" ]; then
   file_path=$(cat ${USE_OVERLAY_STATE})
-  linfo "Detected overlay redirect file, fetching /overlay-boot/${file_path}"
+  linfo "Detected overlay redirect file, fetching /overlay-boot/upper/${file_path}"
 
   if [ -f "${STATE_FILE}" ]; then
     run rm "${STATE_FILE}"
@@ -110,4 +110,3 @@ else
   linfo "Starting configuration process."
   _packages_boot
 fi
-

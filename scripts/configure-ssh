@@ -43,4 +43,3 @@ run uci set dropbear.wan.Port=1628
 run uci set dropbear.wan.RootPasswordAuth=off
 
 run uci commit
-

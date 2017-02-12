@@ -71,7 +71,7 @@ run uci set "fstab.@global[0].auto_swap=1"
 run uci set "fstab.@global[0].check_fs=0"
 run uci set "fstab.@global[0].delay_root=5"
 
-linfo "Configuring coverlay mount point"
+linfo "Configuring overlay mount point"
 ensure_named_section "fstab.overlay" "mount"
 run uci set "fstab.overlay.enabled=1"
 run uci set "fstab.overlay.fstype=ext4"
@@ -103,4 +103,3 @@ linfo "Enable fstab at boot"
 # Copy data over to overlay partition.
 linfo "Copying data to USB partition"
 run tar -C /overlay -cvf - . | tar -C "${mount_location}" -xf -
-

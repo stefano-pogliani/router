@@ -33,4 +33,3 @@ run uci commit
 
 linfo "Enabling DDNS service"
 /etc/init.d/ddns enable
-

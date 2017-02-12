@@ -20,25 +20,19 @@ run uci set dhcp.@dnsmasq[0].expandhosts=1
 run uci set dhcp.@dnsmasq[0].noresolv=1
 
 # Add upstream DNS servers.
-if [ -n "${DNS_HOST1}" ]; then
-  uci_delete_option "dhcp.@dnsmasq[0].server"
-  run uci add_list "dhcp.@dnsmasq[0].server=${DNS_HOST1}"
-
-  if [ -n "${DNS_HOST2}" ]; then
-    run uci add_list "dhcp.@dnsmasq[0].server=${DNS_HOST2}"
-  fi
-
-  {{#each extra_upstream_dns}}
-    run uci add_list "dhcp.@dnsmasq[0].server={{this}}"
-  {{/each}}
-fi
+uci_delete_option "dhcp.@dnsmasq[0].server"
+{{#each upstream_dns}}
+run uci add_list "dhcp.@dnsmasq[0].server={{this}}"
+{{/each}}
 
 
 # Copy additional '.hosts' files to '/etc/dns/'.
+linfo "Creating additional hosts configuration"
 if [ ! -d "/etc/dns" ]; then
   mkdir "/etc/dns"
 fi
 
+uci_delete_option "dhcp.@dnsmasq[0].addnhosts"
 for hfile in "infra" "services"; do
   linfo "Registering hosts file ${hfile}"
   run cp "${PKG}/etc/${hfile}.hosts" "/etc/dns"
@@ -68,12 +62,11 @@ fi
 # Static leases.
 {{#each static_leases}}
   linfo "Adding static lease '{{name}}'"
-  ensure_named_section "dhcp.{{name}}" "host"
-  run uci set "dhcp.{{name}}.ip={{ip}}"
-  run uci set "dhcp.{{name}}.mac={{mac}}"
-  run uci set "dhcp.{{name}}.name={{name}}"
+  ensure_named_section "dhcp.{{id}}" "host"
+  run uci set "dhcp.{{id}}.ip={{ip}}"
+  run uci set "dhcp.{{id}}.mac={{mac}}"
+  run uci set "dhcp.{{id}}.name={{name}}"
 {{/each}}
 
 
 run uci commit
-

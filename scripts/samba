@@ -31,4 +31,3 @@ run uci commit
 
 linfo "Enabling samba service"
 /etc/init.d/samba enable
-

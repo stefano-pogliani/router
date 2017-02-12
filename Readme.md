@@ -8,7 +8,7 @@ Target configuration
 --------------------
 Scripts and steps assume:
 
-  * OpenWRT version: 14.07 (Barrier Breaker)
+  * OpenWRT version: 15.05 (Barrier Breaker)
   * Router model:    TP-Link TL-WDR4300
 
 
@@ -72,7 +72,6 @@ Steps
   19. Configure scan server.
   20. Setup Wake-On-Line client.
   21. Enhance shell with aliases.
-  22. Zabbix agent.
   #23. CollectD configuration.
 
 

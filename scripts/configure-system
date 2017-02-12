@@ -12,4 +12,3 @@ source "${PKG}/shared/log.inc"
 linfo "Configuring global SysLog IP"
 run uci set "system.@system[0].log_ip=${TARGET_SYSLOG_IP}"
 run uci commit
-

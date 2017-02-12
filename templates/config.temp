@@ -37,4 +37,3 @@ VPN_L3_MASK="{{net.vpn-l3-mask}}"
 # Zabbix
 ZABBIX_AGENT_IP="${LAN_IP}"
 ZABBIX_SERVER="{{zabbix-ip}}"
-

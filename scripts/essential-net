@@ -28,4 +28,3 @@ run uci set "system.@system[0].hostname=${HOSTNAME}"
 
 linfo "Committing *ALL* changes"
 run uci commit
-

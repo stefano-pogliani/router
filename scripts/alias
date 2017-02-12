@@ -10,4 +10,3 @@ source "${PKG}/shared/util.inc"
 
 linfo "Adding aliases to the system"
 ensure_line_in_file "/etc/profiles" "alias ll='ls -la --group-directories-first'"
-

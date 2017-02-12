@@ -1,13 +1,6 @@
 # Hosts file for other services.
 # Hosts.
-192.168.23.100    git
+#   NONE
 
 # Services.
-192.168.23.100    blank
-192.168.23.100    dev
-192.168.23.100    phpmyadmin
-192.168.31.254    projects
-192.168.23.100    utils
-192.168.23.100    wiki
-
-192.168.23.103    cloud
+#   NONE

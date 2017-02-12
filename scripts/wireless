@@ -36,4 +36,3 @@ run uci set "wireless.lan.ssid=${LAN_WIFI_NAME}"
 
 linfo "Commiting wireless changes"
 run uci commit
-

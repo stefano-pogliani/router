@@ -4,17 +4,11 @@
   "kmod-usb-printer",
 
   "ddns-scripts",
+  "ddns-scripts_no-ip_com",
   "etherwake",
   "openvpn-easy-rsa",
   "openvpn-openssl",
   "samba36-server",
-  "sane-frontends",
-  "sane-backends",
-  "xinetd",
-  "zabbix-agentd",
-
-  "hplip",
-  "p910nd",
 
   "shadow-useradd",
   "sudo",

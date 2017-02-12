@@ -25,4 +25,3 @@ run echo -n 'service sane-port
 
 linfo "Enabling xinetd service"
 /etc/init.d/xinetd enable
-
