@@ -25,6 +25,11 @@ uci_delete_option "dhcp.@dnsmasq[0].server"
 run uci add_list "dhcp.@dnsmasq[0].server={{this}}"
 {{/each}}
 
+uci_delete_option "dhcp.@dnsmasq[0].rebind_domain"
+{{#each rebind_domain}}
+run uci add_list "dhcp.@dnsmasq[0].rebind_domain={{this}}"
+{{/each}}
+
 
 # Copy additional '.hosts' files to '/etc/dns/'.
 linfo "Creating additional hosts configuration"

@@ -61,7 +61,6 @@ _main_configuration() {
   #run "${PKG}/printer"
   #run "${PKG}/scan"
   run "${PKG}/alias"
-  #run "${PKG}/zabbix"
 
   # End of the process.
   resume_from

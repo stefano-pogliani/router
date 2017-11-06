@@ -14,9 +14,16 @@
     "src":       "wan",
     "target":    "ACCEPT"
   }, {
-    "dest_port": 2351,
-    "id":        "owncloud_public",
-    "name":      "Public OwnCloud Access",
+    "dest_port": 8080,
+    "id":        "http_public",
+    "name":      "Public HTTP Access",
+    "proto":     "tcp",
+    "src":       "wan",
+    "target":    "ACCEPT"
+  }, {
+    "dest_port": 8433,
+    "id":        "https_public",
+    "name":      "Public HTTPS Access",
     "proto":     "tcp",
     "src":       "wan",
     "target":    "ACCEPT"
@@ -24,23 +31,23 @@
 
   "port_forwords": [{
     "dest":      "lan",
-    "dest_ip":   "192.168.23.103",
+    "dest_ip":   "192.168.55.103",
     "dest_port": 443,
-    "id":        "owncloud_external",
-    "name":      "OwnCloud external",
+    "id":        "https_server",
+    "name":      "HTTPS Server",
     "proto":     "tcp",
     "src":       "wan",
-    "src_dport": 2351,
+    "src_dport": 8443,
     "target":    "DNAT"
   }, {
     "dest":      "lan",
-    "dest_ip":   "192.168.23.103",
-    "dest_port": 443,
-    "id":        "owncloud_internal",
-    "name":      "OwnCloud internal",
+    "dest_ip":   "192.168.55.103",
+    "dest_port": 80,
+    "id":        "http_server",
+    "name":      "HTTP Server",
     "proto":     "tcp",
-    "src":       "lan",
-    "src_dport": 2351,
+    "src":       "wan",
+    "src_dport": 8080,
     "target":    "DNAT"
   }]
 }

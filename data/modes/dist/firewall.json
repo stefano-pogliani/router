@@ -1,0 +1,53 @@
+{
+  "rules": [{
+    "dest_port": 1628,
+    "id":        "ssh_public",
+    "name":      "Public SSH Access",
+    "proto":     "tcp",
+    "src":       "wan",
+    "target":    "ACCEPT"
+  }, {
+    "dest_port": 2309,
+    "id":        "openvpn_public",
+    "name":      "Public OpenVPN Access",
+    "proto":     "tcp udp",
+    "src":       "wan",
+    "target":    "ACCEPT"
+  }, {
+    "dest_port": 8080,
+    "id":        "http_public",
+    "name":      "Public HTTP Access",
+    "proto":     "tcp",
+    "src":       "wan",
+    "target":    "ACCEPT"
+  }, {
+    "dest_port": 8433,
+    "id":        "https_public",
+    "name":      "Public HTTPS Access",
+    "proto":     "tcp",
+    "src":       "wan",
+    "target":    "ACCEPT"
+  }],
+
+  "port_forwords": [{
+    "dest":      "lan",
+    "dest_ip":   "192.168.23.103",
+    "dest_port": 443,
+    "id":        "https_server",
+    "name":      "HTTPS Server",
+    "proto":     "tcp",
+    "src":       "wan",
+    "src_dport": 8443,
+    "target":    "DNAT"
+  }, {
+    "dest":      "lan",
+    "dest_ip":   "192.168.23.103",
+    "dest_port": 80,
+    "id":        "http_server",
+    "name":      "HTTP Server",
+    "proto":     "tcp",
+    "src":       "wan",
+    "src_dport": 8080,
+    "target":    "DNAT"
+  }]
+}

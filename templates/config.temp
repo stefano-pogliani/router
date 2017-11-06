@@ -32,8 +32,3 @@ VPN_L2_START="{{net.vpn-l2-start}}"
 
 VPN_L3_IP="{{net.vpn-l3-ip}}"
 VPN_L3_MASK="{{net.vpn-l3-mask}}"
-
-
-# Zabbix
-ZABBIX_AGENT_IP="${LAN_IP}"
-ZABBIX_SERVER="{{zabbix-ip}}"
