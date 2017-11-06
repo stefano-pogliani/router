@@ -1,3 +1,9 @@
 # Hosts file for infrastructure related services.
 # Hosts.
-192.168.16.1      gayr.sph gayr spddns.no-ip.biz
+192.168.16.1      gayr.sph gayr
+
+# This is needed to redirect internal requests to my personal server.
+# It seems that BT cannot talk to its own public IP.
+192.168.23.103    spddns.no-ip.biz
+192.168.23.103    home.spogliani.net
+192.168.23.103    grafana.home.spogliani.net
