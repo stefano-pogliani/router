@@ -36,17 +36,19 @@ they need to be built first.
 Run the following from the root of the repository to populate the
 `dist` directory with usable scripts:
 
-  npm install
-  grunt
+```bash
+npm install
+grunt
 
-  scp dist.tar.gz root@192.168.1.1:
-  ssh root@192.168.1.1
+scp dist.tar.gz root@192.168.1.1:
+ssh root@192.168.1.1
 
-  gunzip dist.tar.gz
-  tar -xf dist.tar
-  rm dist.tar
+gunzip dist.tar.gz
+tar -xf dist.tar
+rm dist.tar
 
-  ./router-bootstrap/sequence
+./router-bootstrap/sequence
+```
 
 
 Steps

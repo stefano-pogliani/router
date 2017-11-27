@@ -1,18 +1,15 @@
 {
-  "rebind_domain": [
-    "dyno.sph"
-  ],
+  "rebind_domain": [],
 
   "upstream_dns": [
-    "/dyno.sph/192.168.21.241",
     "8.8.4.4",
     "8.8.8.8"
   ],
 
   "static_leases": [{
     "id": "m910q",
-    "ip":   "192.168.21.242",
-    "mac":  "???",
+    "ip":   "192.168.23.103",
+    "mac":  "6c:4b:90:21:8a:56",
     "name": "m910q"
   }]
 }

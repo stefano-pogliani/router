@@ -6,4 +6,7 @@
 # It seems that BT cannot talk to its own public IP.
 192.168.23.103    spddns.no-ip.biz
 192.168.23.103    home.spogliani.net
+192.168.23.103    firefly.home.spogliani.net
 192.168.23.103    grafana.home.spogliani.net
+192.168.23.103    prometheus.home.spogliani.net
+192.168.23.103    wekan.home.spogliani.net
